@@ -1,20 +1,23 @@
-# Use official Python image
-FROM python:3.9
+# Stage 1: Build environment
+FROM python:3.9-slim as builder
 
-# Set working directory inside the container
+WORKDIR /app
+# Install dependencies manually 
+RUN pip install --no-cache-dir --prefix=/install flask
+
+# Stage 2: Final minimal runtime environment
+FROM python:3.9-slim
+
 WORKDIR /app
 
-# Copy project files to container
+# Copy only necessary files from builder
+COPY --from=builder /install /usr/local
+
+# Copy your app files into the container
 COPY . /app
 
-# Install dependencies
-RUN pip install flask
-
-# Ensure the data directory exists 
-RUN mkdir -p /data
-
-# Expose port 5000
+# Expose port 5000 for Flask
 EXPOSE 5000
 
-# Run the Flask app
+# Run the Flask application
 CMD ["python", "app.py"]
