@@ -2,7 +2,7 @@
 FROM python:3.9-slim as builder
 
 WORKDIR /app
-# Install dependencies manually 
+# Install dependencies  
 RUN pip install --no-cache-dir --prefix=/install flask
 
 # Stage 2: Final minimal runtime environment
@@ -17,7 +17,7 @@ COPY --from=builder /install /usr/local
 COPY . /app
 
 # Expose port 5000 for Flask
-EXPOSE 5000
+EXPOSE 3000
 
-# Run the Flask application
+# Run the todo application
 CMD ["python", "app.py"]
